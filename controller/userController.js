@@ -92,9 +92,12 @@ exports.login = async (req, res) => {
                 let token = await jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
 
                 const cookiesOption = {
-                    expires: new Date(Date.now() + 60 * 60 * 1000),
-                    httpOnly: true
-                };
+                              httpOnly: true,
+                              secure: process.env.NODE_ENV === "production",
+                              sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+                              maxAge: 60 * 60 * 1000,
+                        };
+
                 const ip = req.ip;
                 const Tracking = new userTracking({ip:ip,email:userExist.email});
                 await Tracking.save();
