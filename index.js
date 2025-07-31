@@ -17,10 +17,27 @@ app.listen(PORT,()=>{
     console.log(`server started at  Port ${PORT}`);
 });
 
-    app.use(cors({
-      origin: process.env.FRONTEND_URL,
-      credentials: true
-    }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://full-stack-todo-with-role-based-and.vercel.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+
+    // app.use(cors({
+    //   origin: process.env.FRONTEND_URL,
+    //   credentials: true
+    // }));
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
