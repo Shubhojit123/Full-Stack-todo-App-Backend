@@ -91,12 +91,14 @@ exports.login = async (req, res) => {
 
                 let token = await jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
 
+                const isProduction = req.headers.origin?.includes("vercel.app");
+
                 const cookiesOption = {
-                              httpOnly: true,
-                              secure: process.env.NODE_ENV === "production",
-                              sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-                              maxAge: 60 * 60 * 1000,
-                        };
+                  httpOnly: true,
+                  secure: isProduction,       // true only in Vercel
+                  sameSite: isProduction ? "None" : "Lax", // None for cross-origin
+                  maxAge: 60 * 60 * 1000,
+            };
 
                 const ip = req.ip;
                 const Tracking = new userTracking({ip:ip,email:userExist.email});
