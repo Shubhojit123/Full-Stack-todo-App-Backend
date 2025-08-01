@@ -6,6 +6,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const userTracking = require("../model/UserTracking");
 
+const express = require("express");
+const app = express();
+app.set('trust proxy', true);
+
+
 exports.signup = async (req, res) => {
     const signupValidation = z.object(
         {
