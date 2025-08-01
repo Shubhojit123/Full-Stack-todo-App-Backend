@@ -107,6 +107,7 @@ exports.login = async (req, res) => {
             };
 
                 const ip = req.ip;
+                
                 const Tracking = new userTracking({ip:ip,email:userExist.email});
                 await Tracking.save();
                 res.cookie("token", token, cookiesOption).status(200).json({ success: true, message: "Login successfully..", token:token });
