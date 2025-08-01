@@ -106,7 +106,8 @@ exports.login = async (req, res) => {
                   maxAge: 60 * 60 * 1000,
             };
 
-                const ip = req.ip;
+                const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.ip;
+                console.log("Client IP:", ip);
                 
                 const Tracking = new userTracking({ip:ip,email:userExist.email});
                 await Tracking.save();
